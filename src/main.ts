@@ -8,7 +8,7 @@ import makeData from "./data/data.ts"
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="main">
-    <div class="p-10 pt-20 flex justify-center items-center" id="main-container">
+    <div class="p-10 pt-20 flex justify-center items-center w-100vw scroll-x overflow-x-hidden" id="main-container">
       <div id="main-wrapper">
           <div id="blocks" />
       </div>
@@ -41,6 +41,16 @@ const addMarkdownBlock = (code: string = "console.html('hello')\n\n\n\n\n") => {
   blocks.appendChild(div)
 }
 
+const addNewLine = () => {
+  const blocks = document.getElementById("blocks");
+
+  if (!blocks) return;
+
+  const div = document.createElement("div");
+  div.style.paddingBottom = "1rem";
+  blocks.appendChild(div)
+}
+
 const main = () => {
   initStore()
 
@@ -51,6 +61,9 @@ const main = () => {
         break;
       case "javascript":
         addEditorBlock(content)
+        break;
+      case "newline":
+        addNewLine()
         break;
     }
   })

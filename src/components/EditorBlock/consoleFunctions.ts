@@ -16,7 +16,7 @@ const setConsoleFunctions = (block: HTMLElement) => {
   }
 
   console.drop = () => {
-    block.innerHTM = "123"
+    block.innerHTML = "";
   }
 }
 

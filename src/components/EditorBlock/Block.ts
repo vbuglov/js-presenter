@@ -2,6 +2,7 @@ import {EditorView} from "codemirror";
 import { playFill } from "../Icons.ts";
 import makeEditor from "./Editor.ts";
 import setConsoleFunctions from "./consoleFunctions.ts";
+import makeStyle from './makeStyle.ts';
 
 class Block extends HTMLElement {
   private shadow: ShadowRoot;
@@ -35,7 +36,7 @@ class Block extends HTMLElement {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-expect-error
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  run (current, _e) {
+  async run (current, _e) {
     const block = this.shadow.getElementById("block");
 
     if (block) {
@@ -44,6 +45,7 @@ class Block extends HTMLElement {
     }
 
     const value = current.editor.state.doc.toString()
+
     eval(value);
   }
 
@@ -73,46 +75,7 @@ class Block extends HTMLElement {
 
   render() {
     this.shadow.innerHTML = `
-      <style>
-        #container {
-            min-height: 100px;
-            padding-bottom: 20px;
-            width: 100%;
-        }
-        
-        #wrapper {
-            display: flex;
-            position: relative;
-        }
-      
-        #editor {
-          width: min(90vw, 1000px);
-          text-align: left;
-        }
-        
-        .icon {
-            color: #A5A7AC;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 20px;
-            height: 20px;
-        }
-        
-        .icon:hover {
-            background-color: #606165;
-        }
-        
-        #control {
-          position: absolute;
-          left: -50px;
-        }
-        #block {
-            width: 100%;
-            color: white;
-        }
-      </style>
+      ${makeStyle()}
       <div id="container">
         <div id="wrapper">
           <div id="control">

@@ -1,7 +1,9 @@
 import {basicSetup, EditorView} from "codemirror";
 import {javascript} from "@codemirror/lang-javascript";
 import {dracula} from "thememirror";
-import { playFill } from "./Icons.ts";
+import { playFill } from "../Icons.ts";
+import { autocompletion } from '@codemirror/autocomplete';
+import makeEditor from "./Editor.ts";
 
 class Block extends HTMLElement {
   private shadow: ShadowRoot;
@@ -36,6 +38,10 @@ class Block extends HTMLElement {
       block.appendChild(br)
     }
 
+    console.render = (el) => {
+      block.appendChild(el);
+    }
+
     const value = current.editor.state.doc.toString()
     eval(value);
   }
@@ -52,11 +58,7 @@ class Block extends HTMLElement {
     }
 
     if (editorBlock) {
-      const editor =  new EditorView({
-        doc: "console.html('hello')\n\n\n\n\n",
-        extensions: [basicSetup, javascript(), dracula],
-        parent: editorBlock,
-      })
+      const editor = makeEditor("console.html('hello')\n\n\n\n\n", editorBlock)
 
       if (!document.appStore) {
         document.appStore = {}

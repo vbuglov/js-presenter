@@ -1,5 +1,5 @@
 import './style.css'
-import "./components/Block.ts"
+import "./components/EditorBlock/Block.ts"
 import "./components/Control.ts"
 import "./vendors/initFunctions.ts"
 import { initStore } from "./store/useStore.ts"

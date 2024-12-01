@@ -18,3 +18,146 @@ body {
   background-color: #0f0f10;
 }
 
+/* Заголовки */
+h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+  color: #cdcfd3;
+}
+
+h2 {
+  font-size: 1.75em;
+  margin-bottom: 0.5em;
+  color: #cdcfd3;
+}
+
+h3 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+  color: #cdcfd3;
+}
+
+h4 {
+  font-size: 1.25em;
+  margin-bottom: 0.5em;
+  color: #cdcfd3;
+}
+
+h5 {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+  color: #cdcfd3;
+}
+
+h6 {
+  font-size: 0.875em;
+  margin-bottom: 0.5em;
+  color: #cdcfd3;
+}
+
+/* Параграфы */
+p {
+  line-height: 1.6;
+  margin-bottom: 1em;
+  color: #cdcfd3;
+}
+
+/* Жирный текст */
+b, strong {
+  font-weight: bold;
+}
+
+/* Курсивный текст */
+i, em {
+  font-style: italic;
+}
+
+/* Ссылки */
+a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Блочные цитаты */
+blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+  border-left: 4px solid #ccc;
+  color: #555;
+}
+
+/* Ненумерованные списки */
+ul {
+  margin: 1em 0;
+  padding-left: 1.5em;
+  color: #dddee1;
+}
+
+ul li {
+  list-style-type: disc;
+  margin-bottom: 0.5em;
+}
+
+/* Нумерованные списки */
+ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+ol li {
+  list-style-type: decimal;
+  margin-bottom: 0.5em;
+}
+
+/* Код */
+code {
+  padding: 0.2em 0.4em;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 90%;
+  border-radius: 3px;
+  color: white;
+}
+
+pre {
+  background-color: #707378;
+  padding: 1em;
+  overflow-x: auto;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 90%;
+  border-radius: 3px;
+}
+
+/* Горизонтальная линия */
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 2em 0;
+}
+
+/* Изображения */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Таблицы */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 0.5em;
+}
+
+table th {
+  background-color: #f2f2f2;
+  text-align: left;
+}

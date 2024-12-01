@@ -1,9 +1,7 @@
-import {basicSetup, EditorView} from "codemirror";
-import {javascript} from "@codemirror/lang-javascript";
-import {dracula} from "thememirror";
+import {EditorView} from "codemirror";
 import { playFill } from "../Icons.ts";
-import { autocompletion } from '@codemirror/autocomplete';
 import makeEditor from "./Editor.ts";
+import setConsoleFunctions from "./consoleFunctions.ts";
 
 class Block extends HTMLElement {
   private shadow: ShadowRoot;
@@ -19,6 +17,14 @@ class Block extends HTMLElement {
     return [];
   }
 
+  get code() {
+    if (!this.getAttribute('code')) {
+      return 'console.html(\'hello\')\n\n\n\n\n';
+    }
+
+    return this.getAttribute('code');
+  }
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-expect-error
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,20 +32,15 @@ class Block extends HTMLElement {
     this.render();
   }
 
-  run (current, e) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-expect-error
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  run (current, _e) {
     const block = this.shadow.getElementById("block");
-    block.innerHTML = "";
 
-    console.html = (value: any) => {
-      const code = document.createElement("code");
-      const br = document.createElement("br");
-      code.innerHTML = JSON.stringify(value);
-      block.appendChild(code)
-      block.appendChild(br)
-    }
-
-    console.render = (el) => {
-      block.appendChild(el);
+    if (block) {
+      block.innerHTML = "";
+      setConsoleFunctions(block)
     }
 
     const value = current.editor.state.doc.toString()
@@ -58,7 +59,7 @@ class Block extends HTMLElement {
     }
 
     if (editorBlock) {
-      const editor = makeEditor("console.html('hello')\n\n\n\n\n", editorBlock)
+      const editor = makeEditor(this.code, editorBlock)
 
       if (!document.appStore) {
         document.appStore = {}

@@ -1,32 +1,39 @@
 import './style.css'
-import { setupCounter } from './counter.ts'
-import {dracula} from 'thememirror';
-import {basicSetup, EditorView} from "codemirror"
-import {javascript} from "@codemirror/lang-javascript"
 import "./components/Block.ts"
+import "./components/Control.ts"
+import "./vendors/initFunctions.ts"
+import { initStore } from "./store/useStore.ts"
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div class="p-10 flex justify-center items-center" id="main">
-    <div id="container">
-        <div style="width: min(90vw, 1000px);" class="text-left" id="editor"></div>
-        <block-code color="red" radius="100"/>
-        <div style="width: min(90vw, 1000px);" class="text-left" id="addblock"></div>
+  <div id="main">
+    <div class="p-10 pt-20 flex justify-center items-center" id="main-container">
+      <div id="main-wrapper">
+          <div style="width: min(90vw, 1000px);" class="text-left" id="editor"></div>
+          <div id="blocks">
+            <div><block-code /></div>
+            <div><block-code /></div>
+            <div><block-code /></div>
+          </div>
+          <div class="flex w-full justify-center">
+            <div id="addBlock">add block</div>
+          </div>
+      </div>
     </div>
   </div>
 `
 const main = () => {
-  const editor = document.getElementById('editor')
+  initStore()
 
-  if (editor) {
-    new EditorView({
-      doc: "console.log('hello')\n",
-      extensions: [basicSetup, javascript(), dracula],
-      parent: editor,
-    })
+  const addBlock = document.getElementById("addBlock");
+  const blocks = document.getElementById("blocks");
+
+  if (!addBlock) return;
+
+  addBlock.onclick = () => {
+    const div = document.createElement("div");
+    div.innerHTML = `<block-code />`
+    blocks.appendChild(div)
   }
-
 }
 
 main();
-
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)

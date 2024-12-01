@@ -1,3 +1,20 @@
 body {
-  background-color: #88868c;
+  background-color: #2B2D30;
 }
+
+#addBlock {
+  padding: 10px;
+  background-color: #1E1F22;
+  border-radius: 5px;
+  text-align: center;
+  color: #64666a;
+  width: 200px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+#addBlock:hover {
+  color: #a3a6aa;
+  background-color: #0f0f10;
+}
+

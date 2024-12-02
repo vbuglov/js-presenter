@@ -11,7 +11,6 @@ const makeData = () => {
     {
       "type": "javascript",
       "content": `
-      
 const el = fetch('/api/v1/books')
   .then((el) => el.json())
   .then((el) => {
@@ -20,8 +19,7 @@ const el = fetch('/api/v1/books')
   })
   .catch((error) => {
     console.html(error.toString())
-  }) 
-   
+  })
       `
     },
     {
@@ -67,6 +65,8 @@ const el = fetch('/api/v1/books')
     {
       "type": "javascript",
       "content": `
+console.html(localStorage.getItem('catName'))      
+
 localStorage.setItem('catName', 'Вася')
 console.html(localStorage.getItem('catName'))
 
@@ -130,8 +130,21 @@ const observer = new IntersectionObserver((entries) => {
 // Наблюдаем за квадратиком
 observer.observe(square);
       
-      
-      
+      `
+    },
+    { "type": "newline", content: "" },
+    {
+      "type": "markdown",
+      "content": `
+### Web GPU
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+localStorage.setItem('catName', 'Вася')
+console.html(localStorage.getItem('catName'))
+
       `
     },
   ].map((el) => {

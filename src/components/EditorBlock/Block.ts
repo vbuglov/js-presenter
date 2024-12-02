@@ -38,10 +38,15 @@ class Block extends HTMLElement {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async run (current, _e) {
     const block = this.shadow.getElementById("block");
+    const editor = this.shadow.getElementById('editor')
 
     if (block) {
       block.innerHTML = "";
       setConsoleFunctions(block)
+    }
+
+    if (editor) {
+      editor.classList.add('hide');
     }
 
     const value = current.editor.state.doc.toString()
@@ -60,12 +65,11 @@ class Block extends HTMLElement {
       runButton.onclick = (e) => this.run(this, e);
     }
 
-    if (editorBlock) {
+    if (editorBlock && this.code) {
       const editor = makeEditor(this.code, editorBlock)
 
-      if (!document.appStore) {
-        document.appStore = {}
-        document.appStore.editors = {}
+      editorBlock.onclick = () => {
+        editorBlock.classList.remove('hide');
       }
 
       this.editor = editor;

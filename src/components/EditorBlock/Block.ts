@@ -49,7 +49,12 @@ class Block extends HTMLElement {
       editor.classList.add('hide');
     }
 
-    const value = current.editor.state.doc.toString()
+    let value = current.editor.state.doc.toString()
+    value = `try {
+      ${value}
+    } catch (e) {
+      console.render(JSON.stringify(e))
+    }`
 
     eval(value);
   }

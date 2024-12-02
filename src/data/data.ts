@@ -4,6 +4,18 @@ const makeData = () => {
     {
       "type": "markdown",
       "content": `
+# Jupyter lab + Deno
+
+* Установка anaconda: https://www.anaconda.com/download/success
+* установка Deno
+* deno jupyter --unstable
+* conda install -c conda-forge jupyterlab
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
 # Netify
 Инструмент для перехвата сообщений в браузере
       `
@@ -65,6 +77,7 @@ const el = fetch('/api/v1/books')
     {
       "type": "javascript",
       "content": `
+localStorage.removeItem('catName');
 console.html(localStorage.getItem('catName'))      
 
 localStorage.setItem('catName', 'Вася')
@@ -137,19 +150,239 @@ observer.observe(square);
       "type": "markdown",
       "content": `
 ### Web GPU
+* Повышение скорости работы программ благодаря использованию видеоускорителей
+* Сокращение числа проблем, вызываемыхграфическими драйверами
+* появление новых возможностей веб-приложений
+
+#### Для включения
+* посетить chrome://flags/
+* Unsafe WebGPU Support
+
+#### Доступность
+
+- [x] Google Chrome
+- [ ] Edge
+- [ ] Mozilla
+- [ ] Safari
       `
     },
     {
       "type": "javascript",
       "content": `
-localStorage.setItem('catName', 'Вася')
-console.html(localStorage.getItem('catName'))
+async function init() {
+  if (!navigator.gpu) {
+    console.html('WebGPU not supported.')
+  }
+
+  const adapter = await navigator.gpu.requestAdapter();
+  if (!adapter) {
+    console.html('Couldnt request WebGPU adapter.')
+  } else {
+     const device = await adapter.requestDevice();
+  }
+
+}
+
+init()
+      
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
+### Battery Status API
+API состояния батареи (Battery Status API), чаще называемое Battery API.
+
+
+* предоставляет информацию об уровне заряда батареи системы 
+* позволяет получать уведомления о событиях, которые отправляются при изменении уровня заряда или состояния зарядки. 
+
+Это может быть полезно для настройки использования ресурсов вашего приложения с целью снижения 
+расхода батареи при низком уровне заряда или для сохранения данных перед разрядкой батареи, чтобы предотвратить их потерю.
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+navigator.getBattery().then((battery) => {
+  function updateAllBatteryInfo() {
+    updateChargeInfo();
+    updateLevelInfo();
+    updateChargingInfo();
+    updateDischargingInfo();
+  }
+  updateAllBatteryInfo();
+
+  battery.addEventListener("chargingchange", () => {
+    updateChargeInfo();
+  });
+  function updateChargeInfo() {
+    console.html(\`Battery charging? \${battery.charging ? "Yes" : "No"}\`);
+  }
+
+  battery.addEventListener("levelchange", () => {
+    updateLevelInfo();
+  });
+  function updateLevelInfo() {
+    console.html(\`Battery level: \${battery.level * 100}%\`);
+  }
+
+  battery.addEventListener("chargingtimechange", () => {
+    updateChargingInfo();
+  });
+  function updateChargingInfo() {
+    console.html(\`Battery charging time: \${battery.chargingTime} seconds\`);
+  }
+
+  battery.addEventListener("dischargingtimechange", () => {
+    updateDischargingInfo();
+  });
+  function updateDischargingInfo() {
+    console.html(\`Battery discharging time: \${battery.dischargingTime} seconds\`);
+  }
+});
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
+# Web Workers API
+      `
+    },
+    { "type": "newline", "content": `` },
+    { "type": "newline", "content": `` },
+    { "type": "newline", "content": `` },
+    {
+      "type": "markdown",
+      "content": `
+# IndexDB
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
+### Создание базы данных и таблицы
+
+
+
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+function openDatabase() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("MyDatabase", 1);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains("MyStore")) {
+                db.createObjectStore("MyStore", { keyPath: "id" }); // id будет уникальным ключом
+            }
+        };
+
+        request.onsuccess = () => {
+            resolve(request.result);
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+    });
+}
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
+### Добавление данных в базу
+
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+function addData(data) {
+    return openDatabase().then((db) => {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction("MyStore", "readwrite");
+            const store = transaction.objectStore("MyStore");
+
+            const request = store.add(data);
+
+            request.onsuccess = () => {
+                resolve("Данные успешно добавлены!");
+            };
+
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
+    });
+}
+
+// Пример использования:
+addData({ id: 1, name: "John", age: 30 })
+    .then(console.log)
+    .catch(console.error);
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
+### Получение данных по ключу
+
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+function getData(id) {
+    return openDatabase().then((db) => {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction("MyStore", "readonly");
+            const store = transaction.objectStore("MyStore");
+
+            const request = store.get(id);
+
+            request.onsuccess = () => {
+                resolve(request.result || "Данных с таким ключом не существует.");
+            };
+
+            request.onerror = () => {
+                reject(request.error);
+            };
+        });
+    });
+}
+
+// Пример использования:
+getData(1)
+    .then(console.log)
+    .catch(console.error);
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
+# Остальные Web API
+
+### File System API
+### File API
 
       `
     },
   ].map((el) => {
     if (!el.content) return el
-    if (el.type === "javascript") return el
+    if (el.type === "javascript") return {
+      type: el.type,
+      content: el.content.replace(/"/gm, "'")
+    }
 
     return {
       type: el.type,

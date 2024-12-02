@@ -6,6 +6,8 @@ import { initStore } from "./store/useStore.ts"
 import {markdown} from "markdown";
 import makeData from "./data/data.ts"
 
+document.appStore = {}
+
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="main">
     <div class="p-10 pt-20 flex justify-center items-center w-100vw scroll-x overflow-x-hidden" id="main-container">

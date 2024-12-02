@@ -11,11 +11,14 @@ const makeStyle = () => {
       #wrapper {
           display: flex;
           position: relative;
+          margin-bottom: 0.5rem;
       }
     
       #editor {
         width: min(90vw, 1000px);
         text-align: left;
+        transition: all .3s;
+        overflow: hidden;
       }
       
       .icon {
@@ -39,6 +42,10 @@ const makeStyle = () => {
       #block {
           width: 100%;
           color: white;
+      }
+      
+      .hide {
+        height: 50px;
       }
     </style>
   

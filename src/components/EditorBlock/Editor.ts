@@ -53,9 +53,9 @@ const makeEditor = (code: string, parent: HTMLElement) => {
       javascript({
         typescript: true,
       }),
-      linter(tsErrorLinter as () => Diagnostic[], {
-        delay: 0,
-      }),
+      // linter(tsErrorLinter as () => Diagnostic[], {
+      //   delay: 0,
+      // }),
       autocompletion({ override: [tsComplete] }),
       hoverTooltip(tsTypeDefinition),
       ViewPlugin.fromClass(

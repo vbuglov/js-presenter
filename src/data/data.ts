@@ -265,34 +265,31 @@ navigator.getBattery().then((battery) => {
       "content": `
 ### Создание базы данных и таблицы
 
-
-
       `
     },
     {
       "type": "javascript",
       "content": `
+const STORE_NAME = 'store'
+
 function openDatabase() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open("MyDatabase", 1);
+    let openRequest = indexedDB.open(STORE_NAME, 1);
 
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains("MyStore")) {
-                db.createObjectStore("MyStore", { keyPath: "id" }); // id будет уникальным ключом
-            }
-        };
-
-        request.onsuccess = () => {
-            resolve(request.result);
-        };
-
-        request.onerror = () => {
-            reject(request.error);
-        };
-    });
+    openRequest.onupgradeneeded = function() {
+      console.html('onupgradeneeded');
+    };
+    
+    openRequest.onerror = function() {
+      console.html('Error', openRequest.error);
+    };
+    
+    openRequest.onsuccess = function() {
+      console.html('onsuccess');
+    };
 }
 
+openDatabase()
+      
       `
     },
     {
@@ -305,30 +302,64 @@ function openDatabase() {
     {
       "type": "javascript",
       "content": `
-function addData(data) {
-    return openDatabase().then((db) => {
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction("MyStore", "readwrite");
-            const store = transaction.objectStore("MyStore");
 
-            const request = store.add(data);
+const STORE_NAME = 'store'
+const DB_NAME = 'page'
 
-            request.onsuccess = () => {
-                resolve("Данные успешно добавлены!");
-            };
+function openDatabase() {
+    let openRequest = indexedDB.open(STORE_NAME, 9);
 
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    });
+    console.html('start');
+
+    openRequest.onupgradeneeded = function() {
+      console.html('onupgradeneeded');
+      
+      let db = openRequest.result;
+
+      if (!db.objectStoreNames.contains(DB_NAME)) { // если хранилище 'books' не существует
+        db.createObjectStore(DB_NAME, {keyPath: 'id'}); // создаём хранилище
+        console.html('createObjectStore');
+      }
+
+      console.html('store created');
+    };
+    
+    openRequest.onsuccess = function() {
+      console.html('onsuccess');
+
+      let db = openRequest.result;
+      let transaction = db.transaction(DB_NAME, "readwrite");
+      console.html('transaction');
+
+      // получить хранилище объектов для работы с ним
+      let books = transaction.objectStore(DB_NAME); // (2)
+
+      let id = Math.round(Math.random() * 10000)
+      
+      let book = {
+        id: 20,
+        price: 10,
+        createdAt: new Date()
+      };
+      
+      let request = books.add(book); // (3)
+
+      let data = books.getAll()
+      console.html(data)
+
+      request.onsuccess = function() { // (4)
+        console.html("Книга добавлена в хранилище");
+      };
+      
+      request.onerror = function() {
+        console.html("Ошибка");
+      };
+
+      console.html('successed');
+    };
 }
 
-// Пример использования:
-addData({ id: 1, name: "John", age: 30 })
-    .then(console.log)
-    .catch(console.error);
-
+openDatabase()
       `
     },
     {
@@ -341,29 +372,31 @@ addData({ id: 1, name: "John", age: 30 })
     {
       "type": "javascript",
       "content": `
-function getData(id) {
-    return openDatabase().then((db) => {
-        return new Promise((resolve, reject) => {
-            const transaction = db.transaction("MyStore", "readonly");
-            const store = transaction.objectStore("MyStore");
+const STORE_NAME = 'store'
+const DB_NAME = 'page'
 
-            const request = store.get(id);
+function openDatabase() {
+    let openRequest = indexedDB.open(STORE_NAME, 9);
+    
+    openRequest.onsuccess = function() {
+      console.html('onsuccess');
 
-            request.onsuccess = () => {
-                resolve(request.result || "Данных с таким ключом не существует.");
-            };
+      let db = openRequest.result;
+      let transaction = db.transaction(DB_NAME, 'readwrite');
 
-            request.onerror = () => {
-                reject(request.error);
-            };
-        });
-    });
+      let books = transaction.objectStore(DB_NAME); // (2)
+
+      let data = books.getAll()
+
+      data.onsuccess = () => {
+        console.html(data.result)
+      }
+
+      console.html('successed');
+    };
 }
 
-// Пример использования:
-getData(1)
-    .then(console.log)
-    .catch(console.error);
+openDatabase()
 
       `
     },
@@ -374,6 +407,18 @@ getData(1)
 
 ### File System API
 ### File API
+### File and Directory Entries API
+### History API
+### Web Share API
+Web Share API позволяет вам обмениваться текстом, ссылками и даже файлами с веб-страницы с другими приложениями,
+установленными на устройстве.
+### Clipboard API
+Clipboard API позволяет вам считывать и записывать данные в буфер обмена. 
+Это полезно для реализации функции копирования в буфер обмена.
+### Screen Wake Lock API
+Блокировка пробуждения экрана
+### Fullscreen API
+Позволяет отображать элемент или всю страницу в полноэкранном режиме.
 
       `
     },

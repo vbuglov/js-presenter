@@ -4,6 +4,14 @@ const makeData = () => {
     {
       "type": "markdown",
       "content": `
+# Чекинатор
+...
+
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
 # Jupyter lab + Deno
 
 * Установка anaconda: https://www.anaconda.com/download/success
@@ -34,6 +42,7 @@ const el = fetch('/api/v1/books')
   })
       `
     },
+
     {
       "type": "markdown",
       "content": `
@@ -72,6 +81,21 @@ const el = fetch('/api/v1/books')
 * Storage
 * Window
 * StorageEvent
+
+### Точки входа
+
+* Браузерные объекты
+* window
+* document
+* navigator
+
+Объект navigator является частью Web API в браузерной среде и предоставляет информацию о браузере пользователя, 
+операционной системе, языке и другие данные, связанные с пользовательским агентом. Этот объект часто используется в веб-приложениях для 
+адаптации функционала в зависимости от характеристик устройства пользователя.
+
+В стандартном Node.js объект navigator отсутствует. Node.js — это серверная среда выполнения JavaScript, которая не
+ имеет доступа к браузерным API. Поскольку Node.js работает на сервере, он не может напрямую взаимодействовать с объектами, доступными в
+  браузере, такими как window, document или navigator.
       `
     },
     {
@@ -82,6 +106,64 @@ console.html(localStorage.getItem('catName'))
 
 localStorage.setItem('catName', 'Вася')
 console.html(localStorage.getItem('catName'))
+
+      `
+    },
+    { "type": "newline", content: "" },
+    {
+      "type": "markdown",
+      "content": `
+### Battery Status API
+API состояния батареи (Battery Status API), чаще называемое Battery API.
+
+
+* предоставляет информацию об уровне заряда батареи системы 
+* позволяет получать уведомления о событиях, которые отправляются при изменении уровня заряда или состояния зарядки. 
+
+Это может быть полезно для настройки использования ресурсов вашего приложения с целью снижения 
+расхода батареи при низком уровне заряда или для сохранения данных перед разрядкой батареи, чтобы предотвратить их потерю.
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+navigator.getBattery().then((battery) => {
+  function updateAllBatteryInfo() {
+    updateChargeInfo();
+    updateLevelInfo();
+    updateChargingInfo();
+    updateDischargingInfo();
+  }
+  updateAllBatteryInfo();
+
+  battery.addEventListener("chargingchange", () => {
+    updateChargeInfo();
+  });
+  function updateChargeInfo() {
+    console.html(\`Battery charging? \${battery.charging ? "Yes" : "No"}\`);
+  }
+
+  battery.addEventListener("levelchange", () => {
+    updateLevelInfo();
+  });
+  function updateLevelInfo() {
+    console.html(\`Battery level: \${battery.level * 100}%\`);
+  }
+
+  battery.addEventListener("chargingtimechange", () => {
+    updateChargingInfo();
+  });
+  function updateChargingInfo() {
+    console.html(\`Battery charging time: \${battery.chargingTime} seconds\`);
+  }
+
+  battery.addEventListener("dischargingtimechange", () => {
+    updateDischargingInfo();
+  });
+  function updateDischargingInfo() {
+    console.html(\`Battery discharging time: \${battery.dischargingTime} seconds\`);
+  }
+});
 
       `
     },
@@ -145,7 +227,130 @@ observer.observe(square);
       
       `
     },
+    {
+      "type": "javascript",
+      "content": `
+
+const element = document.createElement('div');
+element.style.position = 'relative';
+element.style.width = '500px';
+element.style.height = '300px';
+element.style.border = '1px solid black';
+
+const outerSquare = document.createElement('div');
+outerSquare.style.width = '100px';
+outerSquare.style.height = '100px';
+outerSquare.style.backgroundColor = 'green';
+outerSquare.style.position = 'absolute';
+outerSquare.style.left = '0px';
+outerSquare.style.top = '80px';
+
+
+element.appendChild(outerSquare)
+
+// Добавляем внешний квадрат на страницу
+console.render(element);
+
+// Создаем внутренний квадрат
+const innerSquare = document.createElement('div');
+innerSquare.style.width = '60px';
+innerSquare.style.height = '60px';
+innerSquare.style.backgroundColor = 'orange';
+innerSquare.style.position = 'absolute';
+innerSquare.style.left = '0px';
+innerSquare.style.top = '35px'; // Позиционируем внутри внешнего квадрата
+innerSquare.style.opacity = "0.8"
+
+// Добавляем внутренний квадрат во внешний
+outerSquare.appendChild(innerSquare);
+
+// Начальные позиции квадратов
+let outerPosition = 0;
+let innerPosition = 0;
+
+// Функция анимации
+function animate() {
+    outerPosition += 0.1; // Скорость внешнего квадрата
+    innerPosition += 0.3; // Скорость внутреннего квадрата
+
+    outerSquare.style.left = outerPosition + 'px';
+    innerSquare.style.left = innerPosition + 'px';
+
+    if (innerPosition < 750) {
+        requestAnimationFrame(animate);
+    }
+}
+
+// Настраиваем IntersectionObserver
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          // Меняем цвет квадратов на фиолетовый
+          outerSquare.style.backgroundColor = 'black';
+          innerSquare.style.backgroundColor = 'white';
+        } else if (entry.intersectionRatio < 1) {
+            // Меняем цвет квадратов на фиолетовый
+            outerSquare.style.backgroundColor = 'purple';
+            innerSquare.style.backgroundColor = 'purple';
+        }
+    });
+}, {
+    root: outerSquare, // Отслеживаем относительно внешнего квадрата
+    threshold: [0, 1] // Отслеживаем изменение пересечения
+});
+
+// Начинаем наблюдение за внутренним квадратом
+observer.observe(innerSquare);
+
+// Запускаем анимацию
+animate();
+      
+      `
+    },
     { "type": "newline", content: "" },
+    {
+      "type": "markdown",
+      "content": `
+# WebNN / Web AI
+
+* Запуск искуственного интеллекта на стороне клиента на процессоре, видеокарте или NPU устройстве / WebAssembly / WebGPU с использованием JavaScript
+
+* Нейро́нный проце́ссор (англ. Neural Processing Unit, NPU или ИИ-ускоритель англ. AI accelerator) — это специализированный класс микропроцессоров и сопроцессоров (часто являющихся специализированной интегральной схемой), используемый для аппаратного ускорения работы
+ алгоритмов искусственных нейронных сетей, компьютерного зрения, распознавания по голосу, машинного обучения и других методов искусственного интеллекта[1].
+* Устройство NPU отвечает за обработку данных, полученных от основной консоли и других подключенных устройств (консолей или крыльев) 
+и эффективно распределяет нагрузку, обеспечивает плавную и быструю работу всей сетевой системы благодаря собственным 
+вычислительным мощностями
+
+## WebNN
+https://www.w3.org/TR/webnn/
+
+
+Web Neural Network API (WebNN) — это низкоуровневый API, разработанный для ускорения вывода нейронных сетей в веб-приложениях
+ за счет использования аппаратных возможностей устройств, таких как GPU, CPU и специализированные AI-ускорители. Он предоставляет 
+ абстракцию, независимую от конкретных платформ, что позволяет веб-разработчикам эффективно интегрировать машинное обучение в
+  свои приложения без привязки к специфическим возможностям операционных систем.
+
+### Текущее состояние технологии:
+* Кандидат в рекомендации W3C: По состоянию на 4 декабря 2024 года WebNN API находится на стадии Candidate Recommendation Draft, что свидетельствует о его зрелости и готовности к внедрению.
+* Поддержка браузеров: Ведутся работы по интеграции WebNN API в основные браузеры. Например, в Microsoft Edge реализована поддержка через DirectML, что позволяет использовать аппаратное ускорение на устройствах с Windows.
+* Реальные применения: WebNN API уже используется в различных демонстрационных приложениях, включая классификацию изображений, сегментацию и генерацию изображений, что подтверждает его практическую применимость.
+* https://github.com/webmachinelearning/awesome-webnn?utm_source=chatgpt.com
+
+Активно используемые библиотеки исскуственного интелекта в бразауре:
+ 
+* Keras.js
+* ml5.js
+* TensorFlow.js
+
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+    
+      `
+    },
+    { "type": "newline", "content": `` },
     {
       "type": "markdown",
       "content": `
@@ -160,10 +365,17 @@ observer.observe(square);
 
 #### Доступность
 
-- [x] Google Chrome
-- [ ] Edge
-- [ ] Mozilla
-- [ ] Safari
+![123](/caniuse.png)
+      `
+    },
+    {
+      type: "newline",
+      content: ""
+    },
+    {
+      "type": "markdown",
+      "content": `
+![123](/developer_mozilla.png)
       `
     },
     {
@@ -188,70 +400,6 @@ init()
 
       `
     },
-    {
-      "type": "markdown",
-      "content": `
-### Battery Status API
-API состояния батареи (Battery Status API), чаще называемое Battery API.
-
-
-* предоставляет информацию об уровне заряда батареи системы 
-* позволяет получать уведомления о событиях, которые отправляются при изменении уровня заряда или состояния зарядки. 
-
-Это может быть полезно для настройки использования ресурсов вашего приложения с целью снижения 
-расхода батареи при низком уровне заряда или для сохранения данных перед разрядкой батареи, чтобы предотвратить их потерю.
-      `
-    },
-    {
-      "type": "javascript",
-      "content": `
-navigator.getBattery().then((battery) => {
-  function updateAllBatteryInfo() {
-    updateChargeInfo();
-    updateLevelInfo();
-    updateChargingInfo();
-    updateDischargingInfo();
-  }
-  updateAllBatteryInfo();
-
-  battery.addEventListener("chargingchange", () => {
-    updateChargeInfo();
-  });
-  function updateChargeInfo() {
-    console.html(\`Battery charging? \${battery.charging ? "Yes" : "No"}\`);
-  }
-
-  battery.addEventListener("levelchange", () => {
-    updateLevelInfo();
-  });
-  function updateLevelInfo() {
-    console.html(\`Battery level: \${battery.level * 100}%\`);
-  }
-
-  battery.addEventListener("chargingtimechange", () => {
-    updateChargingInfo();
-  });
-  function updateChargingInfo() {
-    console.html(\`Battery charging time: \${battery.chargingTime} seconds\`);
-  }
-
-  battery.addEventListener("dischargingtimechange", () => {
-    updateDischargingInfo();
-  });
-  function updateDischargingInfo() {
-    console.html(\`Battery discharging time: \${battery.dischargingTime} seconds\`);
-  }
-});
-
-      `
-    },
-    {
-      "type": "markdown",
-      "content": `
-# Web Workers API
-      `
-    },
-    { "type": "newline", "content": `` },
     { "type": "newline", "content": `` },
     { "type": "newline", "content": `` },
     {
@@ -403,9 +551,97 @@ openDatabase()
     {
       "type": "markdown",
       "content": `
+### File System API
+
+![123](/filesystemapi.png)
+
+#### Получение файлов и папок из папки
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+
+async function selectFolder() {
+    try {
+        // Открыть диалог выбора папки
+        const directoryHandle = await window.showDirectoryPicker();
+
+        // Перебрать содержимое папки
+        for await (const [name, handle] of directoryHandle.entries()) {
+            if (handle.kind === 'file') {
+                console.html(\`File: \${name}\`);
+            } else if (handle.kind === 'directory') {
+                console.html(\`Directory: \${name}\`);
+            }
+        }
+    } catch (err) {
+        console.error('Error accessing folder:', err);
+    }
+}
+
+selectFolder()
+      
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+ async function saveFile() {
+  const options = {
+    types: [
+      {
+        description: 'Текстовые файлы',
+        accept: {
+          'text/plain': ['.txt'],
+        },
+      },
+    ],
+  };
+
+  // Открываем диалоговое окно для сохранения файла
+  const handle = await window.showSaveFilePicker(options);
+  const writable = await handle.createWritable();
+
+  // Записываем данные в файл
+  await writable.write('Содержимое вашего файла');
+
+  // Закрываем и сохраняем файл
+  await writable.close();
+}
+
+saveFile()
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+ async function runcpp() {
+  // Open file picker
+  const [fileHandle] = await window.showOpenFilePicker();
+  // Get file from handle
+  const file = await fileHandle.getFile();
+  // Read file contents
+  const text = await file.text();
+
+  // Get the exported function
+  const getStringLength = console.getStringLength;
+
+  // Call the function and get the result
+  const length = getStringLength(text);
+
+  // Display the result
+  console.html(\`The length of the file content is \${length} characters.\`)
+} 
+
+runcpp()
+      `
+    },
+    {
+      "type": "markdown",
+      "content": `
 # Остальные Web API
 
-### File System API
 ### File API
 ### File and Directory Entries API
 ### History API

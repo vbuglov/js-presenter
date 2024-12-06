@@ -5,8 +5,32 @@ const makeData = () => {
       "type": "markdown",
       "content": `
 # Чекинатор
-...
 
+* http://89.223.31.122/
+
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+const br =   document.createElement("br");    
+      
+const img = document.createElement("img");
+img.style.width = "300px"
+img.src = "/qr_checkinator.png"
+img.style.paddingBottom = "50px"
+
+console.render(img)
+      `
+    },
+    {
+      "type": "javascript",
+      "content": `
+const img2 = document.createElement("img");
+img2.style.width = "600px"
+img2.src = "/password_example.png"
+
+console.render(img2)
       `
     },
     {
@@ -313,6 +337,8 @@ animate();
       "content": `
 # WebNN / Web AI
 
+![](/webnn_schema.jpg)
+
 * Запуск искуственного интеллекта на стороне клиента на процессоре, видеокарте или NPU устройстве / WebAssembly / WebGPU с использованием JavaScript
 
 * Нейро́нный проце́ссор (англ. Neural Processing Unit, NPU или ИИ-ускоритель англ. AI accelerator) — это специализированный класс микропроцессоров и сопроцессоров (часто являющихся специализированной интегральной схемой), используемый для аппаратного ускорения работы
@@ -347,7 +373,35 @@ Web Neural Network API (WebNN) — это низкоуровневый API, ра
     {
       "type": "javascript",
       "content": `
-    
+// По завершении загрузки страницы запускаем классификацию
+window.addEventListener('load', () => {
+    // Инициализируем классификатор с предобученной моделью "MobileNet"
+    const classifier = ml5.imageClassifier('MobileNet', modelLoaded);
+
+    function modelLoaded() {
+        console.log('Модель успешно загружена!');
+        classifyImage();
+    }
+
+    function classifyImage() {
+        const image = document.getElementById('inputImage');
+        classifier.classify(image, gotResult);
+    }
+
+    function gotResult(results) {
+        // results — это массив объектов с вероятностями и метками
+        let answ = \`\`
+
+        results.forEach((result) => {
+            const label = result.label;
+            const confidence = (result.confidence * 100).toFixed(2);
+            answ = answ + \`<div>\${label}, \${confidence}</div> </br>\`;
+        })
+
+        console.log(results);
+        document.getElementById('result').innerHTML = answ
+    }
+});
       `
     },
     { "type": "newline", "content": `` },
@@ -656,6 +710,32 @@ Clipboard API позволяет вам считывать и записыват
 ### Fullscreen API
 Позволяет отображать элемент или всю страницу в полноэкранном режиме.
 
+      `
+    },
+    { "type": "newline", content: "" },
+    { "type": "newline", content: "" },
+    { "type": "newline", content: "" },
+    {
+      "type": "markdown",
+      "content": `
+# Спасибо за внимание
+
+* Голосовалка
+* https://polls.tbank.ru/s/cm4bamjse01pl36z4gf5te2yp
+
+* Телеграм
+* https://t.me/vbuglov
+      `
+    },
+    { "type": "newline", content: "" },
+    {
+      "type": "javascript",
+      "content": `
+const img = document.createElement("img");
+img.style.width = "700px"
+img.src = "/qr_poll.jpg"
+
+console.render(img)
       `
     },
   ].map((el) => {

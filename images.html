@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Пример распознавания изображений с ml5</title>
+</head>
+<body>
+<h1>Распознавание изображений с помощью ml5.js</h1>
+
+<!-- Изображение для распознавания -->
+<!--<img id="inputImage" crossorigin="anonymous" src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg" alt="Пример изображения" width="400"/>-->
+<!--<img id="inputImage" crossorigin="anonymous" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvOT3NOYRl9lXZ9xC0LUwEbhG7IjEVafCuWA&s" alt="Пример изображения" width="400"/>-->
+<img id="inputImage" crossorigin="anonymous" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStA0Ras3gocbB1OX7AuxQJXKr0HiKGIdOCXg&s" alt="Пример изображения" width="400"/>
+<!-- Блок для вывода результата -->
+<div id="result"></div>
+
+<!-- Подключение библиотеки ml5 -->
+<script src="https://cdn.jsdelivr.net/npm/ml5@latest/dist/ml5.min.js"></script>
+
+<!-- Наш код для классификации -->
+<script>
+    // По завершении загрузки страницы запускаем классификацию
+    window.addEventListener('load', () => {
+        // Инициализируем классификатор с предобученной моделью "MobileNet"
+        const classifier = ml5.imageClassifier('MobileNet', modelLoaded);
+
+        function modelLoaded() {
+            console.log('Модель успешно загружена!');
+            classifyImage();
+        }
+
+        function classifyImage() {
+            const image = document.getElementById('inputImage');
+            classifier.classify(image, gotResult);
+        }
+
+        function gotResult(results) {
+            // results — это массив объектов с вероятностями и метками
+            let answ = ``
+
+            results.forEach((result) => {
+                const label = result.label;
+                const confidence = (result.confidence * 100).toFixed(2);
+                answ = answ + `<div>${label}, ${confidence}</div> </br>`;
+            })
+
+            console.log(results);
+            document.getElementById('result').innerHTML = answ
+        }
+    });
+</script>
+</body>
+</html>

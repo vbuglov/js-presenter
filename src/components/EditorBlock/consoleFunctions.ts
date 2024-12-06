@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
-
 const setConsoleFunctions = (block: HTMLElement) => {
+
   console.render = (el: HTMLElement) => {
     block.appendChild(el);
   }
@@ -17,6 +17,10 @@ const setConsoleFunctions = (block: HTMLElement) => {
 
   console.drop = () => {
     block.innerHTML = "";
+  }
+
+  console.innerHTML = (value: any) => {
+    block.innerHTML = value;
   }
 }
 

@@ -6,6 +6,7 @@ const makeStyle = () => {
           min-height: 100px;
           padding-bottom: 20px;
           width: 100%;
+
       }
       
       #wrapper {

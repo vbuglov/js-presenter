@@ -368,6 +368,10 @@ Web Neural Network API (WebNN) — это низкоуровневый API, ра
 * ml5.js
 * TensorFlow.js
 
+Репозитории нейронок
+
+* https://huggingface.co/
+
       `
     },
     {
@@ -472,10 +476,10 @@ init()
     {
       "type": "javascript",
       "content": `
-const STORE_NAME = 'store'
+const DB_NAME = 'store'
 
 function openDatabase() {
-    let openRequest = indexedDB.open(STORE_NAME, 1);
+    let openRequest = indexedDB.open(DB_NAME, 1);
 
     openRequest.onupgradeneeded = function() {
       console.html('onupgradeneeded');
@@ -505,11 +509,11 @@ openDatabase()
       "type": "javascript",
       "content": `
 
-const STORE_NAME = 'store'
-const DB_NAME = 'page'
+const DB_NAME = 'store'
+const TABLE_NAME = 'page'
 
 function openDatabase() {
-    let openRequest = indexedDB.open(STORE_NAME, 9);
+    let openRequest = indexedDB.open(DB_NAME, 9);
 
     console.html('start');
 
@@ -518,8 +522,8 @@ function openDatabase() {
       
       let db = openRequest.result;
 
-      if (!db.objectStoreNames.contains(DB_NAME)) { // если хранилище 'books' не существует
-        db.createObjectStore(DB_NAME, {keyPath: 'id'}); // создаём хранилище
+      if (!db.objectStoreNames.contains(TABLE_NAME)) { // если хранилище 'books' не существует
+        db.createObjectStore(TABLE_NAME, {keyPath: 'id'}); // создаём хранилище
         console.html('createObjectStore');
       }
 
@@ -530,11 +534,11 @@ function openDatabase() {
       console.html('onsuccess');
 
       let db = openRequest.result;
-      let transaction = db.transaction(DB_NAME, "readwrite");
+      let transaction = db.transaction(TABLE_NAME, "readwrite");
       console.html('transaction');
 
       // получить хранилище объектов для работы с ним
-      let books = transaction.objectStore(DB_NAME); // (2)
+      let books = transaction.objectStore(TABLE_NAME); // (2)
 
       let id = Math.round(Math.random() * 10000)
       
@@ -554,7 +558,7 @@ function openDatabase() {
       };
       
       request.onerror = function() {
-        console.html("Ошибка");
+        console.html("Ошибка: книга с таким id уже создана");
       };
 
       console.html('successed');
@@ -574,19 +578,19 @@ openDatabase()
     {
       "type": "javascript",
       "content": `
-const STORE_NAME = 'store'
-const DB_NAME = 'page'
+const DB_NAME = 'store'
+const TABLE_NAME = 'page'
 
 function openDatabase() {
-    let openRequest = indexedDB.open(STORE_NAME, 9);
+    let openRequest = indexedDB.open(DB_NAME, 9);
     
     openRequest.onsuccess = function() {
       console.html('onsuccess');
 
       let db = openRequest.result;
-      let transaction = db.transaction(DB_NAME, 'readwrite');
+      let transaction = db.transaction(TABLE_NAME, 'readwrite');
 
-      let books = transaction.objectStore(DB_NAME); // (2)
+      let books = transaction.objectStore(TABLE_NAME); // (2)
 
       let data = books.getAll()
 
@@ -670,25 +674,18 @@ saveFile()
     {
       "type": "javascript",
       "content": `
- async function runcpp() {
+async function openfile() {
   // Open file picker
   const [fileHandle] = await window.showOpenFilePicker();
   // Get file from handle
   const file = await fileHandle.getFile();
   // Read file contents
   const text = await file.text();
-
-  // Get the exported function
-  const getStringLength = console.getStringLength;
-
-  // Call the function and get the result
-  const length = getStringLength(text);
-
   // Display the result
-  console.html(\`The length of the file content is \${length} characters.\`)
+  console.html(text)
 } 
 
-runcpp()
+openfile()
       `
     },
     {
@@ -696,9 +693,16 @@ runcpp()
       "content": `
 # Остальные Web API
 
-### File API
-### File and Directory Entries API
+### Geolocation API
+Geolocation API позволяет пользователю предоставлять своё местоположение web-приложению, если пользователь согласится 
+предоставить его. Из соображений конфиденциальности, у пользователя будет запрошено разрешение на предоставление информации о местоположении.
+### Page Visibility API
+При переключении между вкладками, web страница переходит в фоновый режим и поэтому не видна пользователю. Page Visibility 
+API предоставляет события, которые вы можете отслеживать, чтобы узнать, когда страница станет видимой или скрытой, а так 
+же возможность наблюдать текущее состояние видимости страницы.
 ### History API
+DOM-объект Window предоставляет доступ к истории текущей сессии браузера (не путать с историей браузерных расширений) 
+через объект history. Он предоставляет полезные методы и свойства, которые позволяют переходить назад и вперёд по истории пользователя и манипулировать её содержимым.
 ### Web Share API
 Web Share API позволяет вам обмениваться текстом, ссылками и даже файлами с веб-страницы с другими приложениями,
 установленными на устройстве.
